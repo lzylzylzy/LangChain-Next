@@ -1,7 +1,7 @@
 "use server";
 
-import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { createQwenModel } from "@/utils/qwenConfig";
 import { TavilySearchResults } from "@langchain/community/tools/tavily_search";
 import { AgentExecutor, createToolCallingAgent } from "langchain/agents";
 import { pull } from "langchain/hub";
@@ -17,7 +17,9 @@ export async function runAgent(input: string) {
       "hwchase17/openai-tools-agent",
     );
 
-    const llm = new ChatOpenAI({ model: "gpt-4o-mini", temperature: 0 });
+    const llm = createQwenModel({
+      temperature: 0,
+    });
 
     const agent = createToolCallingAgent({
       llm,

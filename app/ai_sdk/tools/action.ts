@@ -1,7 +1,7 @@
 "use server";
 
-import { ChatOpenAI } from "@langchain/openai";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { createQwenModel } from "@/utils/qwenConfig";
 import { createStreamableValue } from "ai/rsc";
 import { z } from "zod";
 import { Runnable } from "@langchain/core/runnables";
@@ -30,13 +30,12 @@ export async function executeTool(
     const prompt = ChatPromptTemplate.fromMessages([
       [
         "system",
-        `You are a helpful assistant. Use the tools provided to best assist the user.`,
+        `You are a helpful assistant. Use the tools provided to best assist the user. When returning structured data, respond in JSON format.`,
       ],
       ["human", "{input}"],
     ]);
 
-    const llm = new ChatOpenAI({
-      model: "gpt-4o-mini",
+    const llm = createQwenModel({
       temperature: 0,
     });
 

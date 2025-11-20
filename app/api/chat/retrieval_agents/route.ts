@@ -11,7 +11,8 @@ import {
   HumanMessage,
   SystemMessage,
 } from "@langchain/core/messages";
-import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
+import { OpenAIEmbeddings } from "@langchain/openai";
+import { createQwenModel } from "@/utils/qwenConfig";
 import { createRetrieverTool } from "langchain/tools/retriever";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 
@@ -67,8 +68,7 @@ export async function POST(req: NextRequest) {
       .map(convertVercelMessageToLangChainMessage);
     const returnIntermediateSteps = body.show_intermediate_steps;
 
-    const chatModel = new ChatOpenAI({
-      model: "gpt-4o-mini",
+    const chatModel = createQwenModel({
       temperature: 0.2,
     });
 

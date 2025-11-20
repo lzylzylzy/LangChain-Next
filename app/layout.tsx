@@ -13,7 +13,7 @@ const Logo = () => (
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 240 41"
-    className="h-8 flex-shrink-0 self-start"
+    className="flex-shrink-0 self-start h-8"
   >
     <path
       fill="currentColor"
@@ -42,19 +42,19 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/images/favicon.ico" />
         <meta
           name="description"
-          content="Starter template showing how to use LangChain in Next.js projects. See source code and deploy your own at https://github.com/langchain-ai/langchain-nextjs-template!"
+          content="Starter template showing how to use LangChain in Next.js projects. See source code and deploy your own at https://github.com/lzylzylzy/LangChain-Next!"
         />
         <meta property="og:title" content="LangChain + Next.js Template" />
         <meta
           property="og:description"
-          content="Starter template showing how to use LangChain in Next.js projects. See source code and deploy your own at https://github.com/langchain-ai/langchain-nextjs-template!"
+          content="Starter template showing how to use LangChain in Next.js projects. See source code and deploy your own at https://github.com/lzylzylzy/LangChain-Next!"
         />
         <meta property="og:image" content="/images/og-image.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="LangChain + Next.js Template" />
         <meta
           name="twitter:description"
-          content="Starter template showing how to use LangChain in Next.js projects. See source code and deploy your own at https://github.com/langchain-ai/langchain-nextjs-template!"
+          content="Starter template showing how to use LangChain in Next.js projects. See source code and deploy your own at https://github.com/lzylzylzy/LangChain-Next!"
         />
         <meta name="twitter:image" content="/images/og-image.png" />
       </head>
@@ -62,16 +62,16 @@ export default function RootLayout({
         <NuqsAdapter>
           <div className="bg-secondary grid grid-rows-[auto,1fr] h-[100dvh]">
             <div className="grid grid-cols-[1fr,auto] gap-2 p-4">
-              <div className="flex gap-4 flex-col md:flex-row md:items-center">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center">
                 <a
                   href="https://js.langchain.com"
                   rel="noopener noreferrer"
                   target="_blank"
-                  className="flex items-center gap-2"
+                  className="flex gap-2 items-center"
                 >
                   <Logo />
                 </a>
-                <nav className="flex gap-1 flex-col md:flex-row">
+                <nav className="flex flex-col gap-1 md:flex-row">
                   <ActiveLink href="/">🏴‍☠️ Chat</ActiveLink>
                   <ActiveLink href="/structured_output">
                     🧱 Structured Output
@@ -91,7 +91,7 @@ export default function RootLayout({
               <div className="flex justify-center">
                 <Button asChild variant="outline" size="default">
                   <a
-                    href="https://github.com/langchain-ai/langchain-nextjs-template"
+                    href="https://github.com/lzylzylzy/LangChain-Next"
                     target="_blank"
                   >
                     <GithubIcon className="size-3" />
@@ -100,7 +100,7 @@ export default function RootLayout({
                 </Button>
               </div>
             </div>
-            <div className="bg-background mx-4 relative grid rounded-t-2xl border border-input border-b-0">
+            <div className="grid relative mx-4 rounded-t-2xl border border-b-0 bg-background border-input">
               <div className="absolute inset-0">{children}</div>
             </div>
           </div>

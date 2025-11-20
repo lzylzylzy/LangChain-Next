@@ -2,14 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { z } from "zod";
 
-import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
+import { createQwenModel } from "@/utils/qwenConfig";
 
 export const runtime = "edge";
 
-const TEMPLATE = `Extract the requested fields from the input.
+const TEMPLATE = `Extract the requested fields from the input and return them as a JSON object.
 
 The field "entity" refers to the first mentioned entity in the input.
+
+You must respond with valid JSON format only.
 
 Input:
 
@@ -31,9 +33,8 @@ export async function POST(req: NextRequest) {
     /**
      * Function calling is currently only supported with ChatOpenAI models
      */
-    const model = new ChatOpenAI({
+    const model = createQwenModel({
       temperature: 0.8,
-      model: "gpt-4o-mini",
     });
 
     /**

@@ -3,7 +3,8 @@ import { Message as VercelChatMessage, StreamingTextResponse } from "ai";
 
 import { createClient } from "@supabase/supabase-js";
 
-import { ChatOpenAI, OpenAIEmbeddings } from "@langchain/openai";
+import { OpenAIEmbeddings } from "@langchain/openai";
+import { createQwenModel } from "@/utils/qwenConfig";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { Document } from "@langchain/core/documents";
@@ -74,8 +75,7 @@ export async function POST(req: NextRequest) {
     const previousMessages = messages.slice(0, -1);
     const currentMessageContent = messages[messages.length - 1].content;
 
-    const model = new ChatOpenAI({
-      model: "gpt-4o-mini",
+    const model = createQwenModel({
       temperature: 0.2,
     });
 

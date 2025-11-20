@@ -4,9 +4,11 @@ import {
   START,
   Annotation,
 } from "@langchain/langgraph";
-import { ChatOpenAI } from "@langchain/openai";
+import { createQwenModel } from "@/utils/qwenConfig";
 
-const llm = new ChatOpenAI({ model: "gpt-4o-mini", temperature: 0 });
+const llm = createQwenModel({
+  temperature: 0,
+});
 
 const builder = new StateGraph(
   Annotation.Root({
