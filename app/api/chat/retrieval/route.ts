@@ -1,9 +1,13 @@
+/**
+ * 带检索的对话 API（RAG）
+ * 基于 Supabase 向量库检索文档，结合对话历史生成回答，流式返回并附带引用来源
+ */
 import { NextRequest, NextResponse } from "next/server";
 import { Message as VercelChatMessage, StreamingTextResponse } from "ai";
 
 import { createClient } from "@supabase/supabase-js";
 
-import { OpenAIEmbeddings } from "@langchain/openai";
+import { createEmbeddings } from "@/utils/embeddingConfig";
 import { createQwenModel } from "@/utils/qwenConfig";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
@@ -16,11 +20,13 @@ import {
 
 export const runtime = "edge";
 
+/** 将检索到的文档列表合并为一段上下文文本 */
 const combineDocumentsFn = (docs: Document[]) => {
   const serializedDocs = docs.map((doc) => doc.pageContent);
   return serializedDocs.join("\n\n");
 };
 
+/** 将 Vercel 消息列表格式化为 Human/Assistant 对话文本 */
 const formatVercelMessages = (chatHistory: VercelChatMessage[]) => {
   const formattedDialogueTurns = chatHistory.map((message) => {
     if (message.role === "user") {
@@ -34,6 +40,7 @@ const formatVercelMessages = (chatHistory: VercelChatMessage[]) => {
   return formattedDialogueTurns.join("\n");
 };
 
+/** 将多轮对话中的追问改写成独立问题的提示词 */
 const CONDENSE_QUESTION_TEMPLATE = `Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
 
 <chat_history>
@@ -46,6 +53,7 @@ const condenseQuestionPrompt = PromptTemplate.fromTemplate(
   CONDENSE_QUESTION_TEMPLATE,
 );
 
+/** 基于上下文和对话历史回答问题的提示词（小狗 Dana 角色） */
 const ANSWER_TEMPLATE = `You are an energetic talking puppy named Dana, and must answer all questions like a happy, talking dog would.
 Use lots of puns!
 
@@ -68,6 +76,7 @@ const answerPrompt = PromptTemplate.fromTemplate(ANSWER_TEMPLATE);
  *
  * https://js.langchain.com/v0.2/docs/how_to/qa_chat_history_how_to/
  */
+/** POST：接收消息，先改写追问再检索文档，流式返回回答，响应头中带 x-sources 引用 */
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -79,11 +88,12 @@ export async function POST(req: NextRequest) {
       temperature: 0.2,
     });
 
+    // Supabase 客户端与向量库（表 documents，查询函数 match_documents）
     const client = createClient(
       process.env.SUPABASE_URL!,
       process.env.SUPABASE_PRIVATE_KEY!,
     );
-    const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
+    const vectorstore = new SupabaseVectorStore(createEmbeddings(), {
       client,
       tableName: "documents",
       queryName: "match_documents",
@@ -98,12 +108,14 @@ export async function POST(req: NextRequest) {
      * You can also use the "createRetrievalChain" method with a
      * "historyAwareRetriever" to get something prebaked.
      */
+    // 链1：根据对话历史把追问改写成独立问题
     const standaloneQuestionChain = RunnableSequence.from([
       condenseQuestionPrompt,
       model,
       new StringOutputParser(),
     ]);
 
+    // 用于在流式返回时拿到检索到的文档，供 x-sources 使用
     let resolveWithDocuments: (value: Document[]) => void;
     const documentPromise = new Promise<Document[]>((resolve) => {
       resolveWithDocuments = resolve;
@@ -119,8 +131,10 @@ export async function POST(req: NextRequest) {
       ],
     });
 
+    // 检索链：输入问题 -> 检索 -> 合并文档为 context
     const retrievalChain = retriever.pipe(combineDocumentsFn);
 
+    // 链2：context + 对话历史 + 问题 -> 生成回答
     const answerChain = RunnableSequence.from([
       {
         context: RunnableSequence.from([
@@ -134,6 +148,7 @@ export async function POST(req: NextRequest) {
       model,
     ]);
 
+    // 组合：先改写问题 -> 再检索+回答，最后转成字节流
     const conversationalRetrievalQAChain = RunnableSequence.from([
       {
         question: standaloneQuestionChain,
@@ -148,6 +163,7 @@ export async function POST(req: NextRequest) {
       chat_history: formatVercelMessages(previousMessages),
     });
 
+    // 将检索来源序列化后放入响应头，供前端展示引用
     const documents = await documentPromise;
     const serializedSources = Buffer.from(
       JSON.stringify(

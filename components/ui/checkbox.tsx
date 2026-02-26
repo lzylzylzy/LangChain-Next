@@ -1,3 +1,6 @@
+/**
+ * 复选框：基于 Radix CheckboxPrimitive，勾选显示 Check 图标
+ */
 import * as React from "react"
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
 import { Check } from "lucide-react"

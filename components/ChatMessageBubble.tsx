@@ -1,3 +1,6 @@
+/**
+ * 单条聊天气泡：用户右对齐、AI 带 emoji 头像，可选展示 sources 引用
+ */
 import { cn } from "@/utils/cn";
 import type { Message } from "ai/react";
 

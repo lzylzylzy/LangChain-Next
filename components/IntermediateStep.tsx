@@ -1,3 +1,6 @@
+/**
+ * Agent 中间步骤展示：折叠块，展示 tool 的 name/args 与 observation
+ */
 import { useState } from "react";
 import type { Message } from "ai/react";
 import { cn } from "@/utils/cn";

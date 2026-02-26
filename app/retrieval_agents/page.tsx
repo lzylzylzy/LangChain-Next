@@ -1,3 +1,7 @@
+/**
+ * 检索 Agent 页：机器人 Robbie，检索工具 + 中间步骤
+ * 使用 api/chat/retrieval_agents，支持上传文档与“显示中间步骤”
+ */
 import { ChatWindow } from "@/components/ChatWindow";
 import { GuideInfoBox } from "@/components/guide/GuideInfoBox";
 

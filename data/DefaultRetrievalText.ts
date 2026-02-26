@@ -1,3 +1,6 @@
+/**
+ * 默认检索文档内容：LangChain 文档 QA 教程 Markdown，用于上传/预填 ingest 表单
+ */
 export default `# QA and Chat over Documents
 
 Chat and Question-Answering (QA) over \`data\` are popular LLM use-cases.

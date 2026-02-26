@@ -1,5 +1,8 @@
 "use client";
 
+/**
+ * 文档上传表单：默认填入 DefaultRetrievalText，提交调用 /api/retrieval/ingest 写入向量库
+ */
 import { useState, type FormEvent } from "react";
 import DEFAULT_RETRIEVAL_TEXT from "@/data/DefaultRetrievalText";
 import { Button } from "./ui/button";

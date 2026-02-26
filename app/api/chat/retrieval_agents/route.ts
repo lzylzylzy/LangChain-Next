@@ -1,3 +1,7 @@
+/**
+ * 带检索工具的 ReAct Agent API
+ * 将 Supabase 向量检索封装为 Agent 的 search_latest_knowledge 工具，机器人 Robbie 角色，支持流式或带中间步骤返回
+ */
 import { NextRequest, NextResponse } from "next/server";
 import { Message as VercelChatMessage, StreamingTextResponse } from "ai";
 
@@ -11,13 +15,14 @@ import {
   HumanMessage,
   SystemMessage,
 } from "@langchain/core/messages";
-import { OpenAIEmbeddings } from "@langchain/openai";
+import { createEmbeddings } from "@/utils/embeddingConfig";
 import { createQwenModel } from "@/utils/qwenConfig";
 import { createRetrieverTool } from "langchain/tools/retriever";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 
 export const runtime = "edge";
 
+/** Vercel AI SDK 消息 -> LangChain 消息类型 */
 const convertVercelMessageToLangChainMessage = (message: VercelChatMessage) => {
   if (message.role === "user") {
     return new HumanMessage(message.content);
@@ -28,6 +33,7 @@ const convertVercelMessageToLangChainMessage = (message: VercelChatMessage) => {
   }
 };
 
+/** LangChain 消息 -> Vercel AI SDK 消息格式（含 tool_calls） */
 const convertLangChainMessageToVercelMessage = (message: BaseMessage) => {
   if (message._getType() === "human") {
     return { content: message.content, role: "user" };
@@ -42,6 +48,7 @@ const convertLangChainMessageToVercelMessage = (message: BaseMessage) => {
   }
 };
 
+/** Agent 系统提示：机器人 Robbie 角色，不知答案时用工具查 LangChain 等 */
 const AGENT_SYSTEM_TEMPLATE = `You are a stereotypical robot named Robbie and must answer all questions like a stereotypical robot. Use lots of interjections like "BEEP" and "BOOP".
 
 If you don't know how to answer a question, use the available tools to look up relevant information. You should particularly do this for questions about LangChain.`;
@@ -53,13 +60,11 @@ If you don't know how to answer a question, use the available tools to look up r
  * https://langchain-ai.github.io/langgraphjs/tutorials/quickstart/
  * https://js.langchain.com/docs/use_cases/question_answering/conversational_retrieval_agents
  */
+/** POST：Agent 可调用检索工具回答问题，根据 show_intermediate_steps 流式或返回完整消息列表 */
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    /**
-     * We represent intermediate steps as system messages for display purposes,
-     * but don't want them in the chat history.
-     */
+    // 只保留 user/assistant，避免中间步骤进入对话历史
     const messages = (body.messages ?? [])
       .filter(
         (message: VercelChatMessage) =>
@@ -72,11 +77,12 @@ export async function POST(req: NextRequest) {
       temperature: 0.2,
     });
 
+    // Supabase 向量库，与 retrieval/ingest 使用的表一致
     const client = createClient(
       process.env.SUPABASE_URL!,
       process.env.SUPABASE_PRIVATE_KEY!,
     );
-    const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
+    const vectorstore = new SupabaseVectorStore(createEmbeddings(), {
       client,
       tableName: "documents",
       queryName: "match_documents",
@@ -84,10 +90,7 @@ export async function POST(req: NextRequest) {
 
     const retriever = vectorstore.asRetriever();
 
-    /**
-     * Wrap the retriever in a tool to present it to the agent in a
-     * usable form.
-     */
+    // 将检索器包装成 Agent 可调用的工具
     const tool = createRetrieverTool(retriever, {
       name: "search_latest_knowledge",
       description: "Searches and returns up-to-date general information.",

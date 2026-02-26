@@ -1,4 +1,7 @@
 "use client";
+/**
+ * Toast 组件：对接 sonner，按 next-themes 主题设置样式
+ */
 import { useTheme } from "next-themes";
 import { Toaster as Sonner } from "sonner";
 

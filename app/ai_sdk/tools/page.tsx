@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * AI SDK Tools 示例页：executeTool 支持 withStructuredOutput / streamEvents 选项
+ * 流式展示每步结果并汇总最终 Result
+ */
 import { readStreamableValue } from "ai/rsc";
 import React, { useEffect, useRef, useState } from "react";
 import { executeTool } from "./action";

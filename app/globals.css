@@ -1,3 +1,4 @@
+/* 全局样式：Tailwind 层 + 设计令牌（亮/暗色） + 基础元素与 hide-scrollbar */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

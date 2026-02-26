@@ -1,3 +1,6 @@
+/**
+ * 按钮组件：CVA 多 variant/size，支持 asChild 渲染为子元素
+ */
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";

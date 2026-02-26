@@ -1,5 +1,8 @@
 "use client";
 
+/**
+ * 导航链接：根据当前 pathname 高亮当前页
+ */
 import { cn } from "@/utils/cn";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";

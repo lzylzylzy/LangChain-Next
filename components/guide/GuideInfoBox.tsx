@@ -1,3 +1,6 @@
+/**
+ * 空状态引导框：居中展示 LangChain 标题与自定义说明内容
+ */
 import { ReactNode } from "react";
 
 export function GuideInfoBox(props: { children: ReactNode }) {

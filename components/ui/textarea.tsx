@@ -1,3 +1,6 @@
+/**
+ * 多行文本框：统一样式，forwardRef 透传
+ */
 import * as React from "react"
 
 import { cn } from "@/utils/cn"

@@ -1,5 +1,8 @@
 "use client";
 
+/**
+ * 抽屉：基于 vaul，含 Trigger/Portal/Overlay/Content/Header/Footer/Title/Description
+ */
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 

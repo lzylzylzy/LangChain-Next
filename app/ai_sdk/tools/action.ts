@@ -1,5 +1,8 @@
 "use server";
 
+/**
+ * AI SDK Tools 服务端：天气参数 schema，支持 withStructuredOutput 或 bind tools + JsonOutputKeyToolsParser，可选 streamEvents
+ */
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createQwenModel } from "@/utils/qwenConfig";
 import { createStreamableValue } from "ai/rsc";
