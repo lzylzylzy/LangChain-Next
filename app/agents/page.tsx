@@ -1,3 +1,7 @@
+/**
+ * 工具调用 Agent 页：鹦鹉 Polly，计算器 + 搜索
+ * 使用 api/chat/agents，支持“显示中间步骤”开关（showIntermediateStepsToggle）
+ */
 import { ChatWindow } from "@/components/ChatWindow";
 import { GuideInfoBox } from "@/components/guide/GuideInfoBox";
 

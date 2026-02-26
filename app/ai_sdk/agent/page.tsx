@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * AI SDK Agent 示例页：服务端 runAgent 流式返回 streamEvents
+ * 展示事件列表与最终 Question/Result
+ */
 import React, { useEffect, useRef, useState } from "react";
 import { readStreamableValue } from "ai/rsc";
 import { runAgent } from "./action";

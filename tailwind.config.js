@@ -1,3 +1,4 @@
+/** Tailwind 配置：扫描 pages/components/app，主题色用 CSS 变量，插件 tailwindcss-animate */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [

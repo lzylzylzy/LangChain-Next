@@ -1,3 +1,7 @@
+/**
+ * LangGraph 图：单节点 agent，接收 messages 调用通义千问（海盗 Patchy），返回 messages + timestamp
+ * 需配合 LangGraph 服务（如 localhost:2024）运行
+ */
 import {
   StateGraph,
   MessagesAnnotation,

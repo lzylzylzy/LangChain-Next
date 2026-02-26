@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * LangGraph 对话页：连接本地 LangGraph 服务（localhost:2024）
+ * 使用 useStream 与 agent 对话，支持编辑/重新生成、分支切换（BranchPicker）
+ */
 import { ChatInput, ChatLayout } from "@/components/ChatWindow";
 import { GuideInfoBox } from "@/components/guide/GuideInfoBox";
 import { ReactNode, Suspense, useState } from "react";
@@ -17,6 +21,7 @@ const onError = (error: unknown) => {
   });
 };
 
+/** 编辑已有消息的输入框，提交后调用 onEdit */
 function EditMessage({
   message,
   onEdit,
@@ -45,6 +50,7 @@ function EditMessage({
   );
 }
 
+/** 单条消息展示，支持 Edit / Regenerate 与分支选择器 */
 function Message(props: {
   message: Message;
   onEdit: (message: Message) => void;
@@ -115,6 +121,7 @@ function Message(props: {
   );
 }
 
+/** 分支切换器：在多个 branch 间左右切换 */
 function BranchPicker(props: {
   current: string;
   branches: string[];
@@ -155,6 +162,7 @@ function BranchPicker(props: {
   );
 }
 
+/** 带本地 state 的输入框，提交后清空 */
 function StatefulChatInput(props: {
   loading: boolean;
   onSubmit: (value: string) => void;
@@ -177,6 +185,7 @@ function StatefulChatInput(props: {
   );
 }
 
+/** 实际使用 useStream 的客户端组件，依赖 threadId 在 URL */
 function ClientLanggraphPage() {
   const [threadId, setThreadId] = useQueryState("threadId");
 

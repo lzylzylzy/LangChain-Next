@@ -1,3 +1,6 @@
+/**
+ * AI SDK RSC 入口页：介绍 Agents 与 Tools 示例并跳转
+ */
 import { GuideInfoBox } from "@/components/guide/GuideInfoBox";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

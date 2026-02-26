@@ -1,5 +1,8 @@
 "use server";
 
+/**
+ * AI SDK Agent 服务端：Tavily 搜索工具 + Hub prompt，流式 streamEvents 写入 createStreamableValue
+ */
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { createQwenModel } from "@/utils/qwenConfig";
 import { TavilySearchResults } from "@langchain/community/tools/tavily_search";

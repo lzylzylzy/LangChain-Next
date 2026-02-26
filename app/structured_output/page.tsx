@@ -1,3 +1,7 @@
+/**
+ * 结构化输出页：固定 JSON 结构（tone、entity、word_count 等）
+ * 使用 api/chat/structured_output，无上传与中间步骤
+ */
 import { ChatWindow } from "@/components/ChatWindow";
 import { GuideInfoBox } from "@/components/guide/GuideInfoBox";
 

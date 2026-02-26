@@ -1,3 +1,7 @@
+/**
+ * 工具调用 ReAct Agent API
+ * 使用 LangGraph 预置的 createReactAgent，配备计算器与 SerpAPI 搜索，鹦鹉 Polly 角色，支持流式或带中间步骤的 JSON 返回
+ */
 import { NextRequest, NextResponse } from "next/server";
 import { Message as VercelChatMessage, StreamingTextResponse } from "ai";
 
@@ -15,6 +19,7 @@ import {
 
 export const runtime = "edge";
 
+/** Vercel AI SDK 消息 -> LangChain 消息类型 */
 const convertVercelMessageToLangChainMessage = (message: VercelChatMessage) => {
   if (message.role === "user") {
     return new HumanMessage(message.content);
@@ -25,6 +30,7 @@ const convertVercelMessageToLangChainMessage = (message: VercelChatMessage) => {
   }
 };
 
+/** LangChain 消息 -> Vercel AI SDK 消息格式（含 tool_calls） */
 const convertLangChainMessageToVercelMessage = (message: BaseMessage) => {
   if (message._getType() === "human") {
     return { content: message.content, role: "user" };
@@ -39,6 +45,7 @@ const convertLangChainMessageToVercelMessage = (message: BaseMessage) => {
   }
 };
 
+/** Agent 系统提示：鹦鹉 Polly 角色，要求经常 squawk */
 const AGENT_SYSTEM_TEMPLATE = `You are a talking parrot named Polly. All final responses must be how a talking parrot would respond. Squawk often!`;
 
 /**
@@ -47,14 +54,12 @@ const AGENT_SYSTEM_TEMPLATE = `You are a talking parrot named Polly. All final r
  *
  * https://langchain-ai.github.io/langgraphjs/tutorials/quickstart/
  */
+/** POST：根据 show_intermediate_steps 流式返回文本或返回完整消息列表（含中间步骤） */
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const returnIntermediateSteps = body.show_intermediate_steps;
-    /**
-     * We represent intermediate steps as system messages for display purposes,
-     * but don't want them in the chat history.
-     */
+    // 只保留 user/assistant 消息，过滤掉 system 等，避免中间步骤污染对话历史
     const messages = (body.messages ?? [])
       .filter(
         (message: VercelChatMessage) =>
@@ -62,8 +67,7 @@ export async function POST(req: NextRequest) {
       )
       .map(convertVercelMessageToLangChainMessage);
 
-    // Requires process.env.SERPAPI_API_KEY to be set: https://serpapi.com/
-    // You can remove this or use a different tool instead.
+    // 工具：计算器 + SerpAPI 搜索（需配置 SERPAPI_API_KEY: https://serpapi.com/）
     const tools = [new Calculator(), new SerpAPI()];
     const chat = createQwenModel({
       temperature: 0,

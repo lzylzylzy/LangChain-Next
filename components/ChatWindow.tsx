@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * 通用聊天窗口：useChat + 空状态/来源/中间步骤/上传文档
+ * 导出 ChatInput、ChatLayout、ChatWindow，供各页按 endpoint 复用
+ */
 import { type Message } from "ai";
 import { useChat } from "ai/react";
 import { useState } from "react";
@@ -23,6 +27,7 @@ import {
 } from "./ui/dialog";
 import { cn } from "@/utils/cn";
 
+/** 消息列表：system 渲染为 IntermediateStep，其余为 ChatMessageBubble（带 sources） */
 function ChatMessages(props: {
   messages: Message[];
   emptyStateComponent: ReactNode;
@@ -107,6 +112,7 @@ export function ChatInput(props: {
   );
 }
 
+/** 未在底部时显示“滚动到底部”按钮 */
 function ScrollToBottom(props: { className?: string }) {
   const { isAtBottom, scrollToBottom } = useStickToBottomContext();
 
@@ -123,6 +129,7 @@ function ScrollToBottom(props: { className?: string }) {
   );
 }
 
+/** 可吸底滚动的内容区，contentRef/scrollRef 由 StickToBottom 提供 */
 function StickyToBottomContent(props: {
   content: ReactNode;
   footer?: ReactNode;
@@ -131,7 +138,6 @@ function StickyToBottomContent(props: {
 }) {
   const context = useStickToBottomContext();
 
-  // scrollRef will also switch between overflow: unset to overflow: auto
   return (
     <div
       ref={context.scrollRef}

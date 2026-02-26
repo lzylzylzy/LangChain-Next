@@ -1,3 +1,7 @@
+/**
+ * 根布局：全局样式、字体、顶栏导航与 GitHub 链接
+ * 使用 NuqsAdapter 做 URL 状态，Toaster 做 toast 提示
+ */
 import "./globals.css";
 import { Public_Sans } from "next/font/google";
 import { ActiveLink } from "@/components/Navbar";
@@ -8,6 +12,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const publicSans = Public_Sans({ subsets: ["latin"] });
 
+/** LangChain 品牌 Logo SVG */
 const Logo = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

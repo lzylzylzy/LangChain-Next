@@ -1,3 +1,7 @@
+/**
+ * 检索对话页（RAG）：小狗 Dana 角色
+ * 使用 api/chat/retrieval，支持上传文档（showIngestForm），空状态展示 RAG 说明
+ */
 import { ChatWindow } from "@/components/ChatWindow";
 import { GuideInfoBox } from "@/components/guide/GuideInfoBox";
 
