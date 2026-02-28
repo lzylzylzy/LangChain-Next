@@ -77,8 +77,8 @@ export default function RootLayout({
                   <Logo />
                 </a>
                 <nav className="flex flex-col gap-1 md:flex-row">
-                  <ActiveLink href="/">🏴‍☠️ Chat</ActiveLink>
-                  <ActiveLink href="/structured_output">
+                  <ActiveLink href="/">🏴‍☠️ 对话</ActiveLink>
+                  {/* <ActiveLink href="/structured_output">
                     🧱 Structured Output
                   </ActiveLink>
                   <ActiveLink href="/agents">🦜 Agents</ActiveLink>
@@ -89,11 +89,12 @@ export default function RootLayout({
                   <ActiveLink href="/ai_sdk">
                     🌊 React Server Components
                   </ActiveLink>
-                  <ActiveLink href="/langgraph">🕸️ LangGraph</ActiveLink>
+                  <ActiveLink href="/langgraph">🕸️ LangGraph</ActiveLink> */}
+                  <ActiveLink href="/upload">📤 上传</ActiveLink>
                 </nav>
               </div>
 
-              <div className="flex justify-center">
+              {/* <div className="flex justify-center">
                 <Button asChild variant="outline" size="default">
                   <a
                     href="https://github.com/lzylzylzy/LangChain-Next"
@@ -103,7 +104,7 @@ export default function RootLayout({
                     <span>Open in GitHub</span>
                   </a>
                 </Button>
-              </div>
+              </div> */}
             </div>
             <div className="grid relative mx-4 rounded-t-2xl border border-b-0 bg-background border-input">
               <div className="absolute inset-0">{children}</div>
